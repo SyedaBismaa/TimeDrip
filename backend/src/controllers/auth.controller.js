@@ -73,7 +73,28 @@ async function loginController(req, res) {
   });
 }
 
+async function logoutController(req, res) {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.JWT_SECRET === "production", // only use secure in production
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      message: "User logged out successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error while logging out",
+      error: error.message,
+    });
+  }
+}
+
+
 module.exports = {
   registerController,
-  loginController
+  loginController,
+  logoutController
 };
